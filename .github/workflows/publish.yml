@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/react-cheatsheet
+  IMAGE_NAME: ghcr.io/ehsanaliverdi/react-cheatsheet
 
 jobs:
   build-and-push:
