@@ -1,9 +1,9 @@
 // src/App.tsx
 import { useMemo, useState } from "react";
-import { AppLayout } from "./components/AppLayout";
-import { SidebarSectionNav } from "./components/SidebarSectionNav";
-import { CheatCard } from "./components/CheatCard";
-import { CheatModal } from "./components/CheatModal";
+import { AppLayout } from "./components1/AppLayout";
+import { SidebarSectionNav } from "./components1/SidebarSectionNav";
+import { CheatCard } from "./components1/CheatCard";
+import { CheatModal } from "./components1/CheatModal";
 import type { CheatItem, CheatExample } from "./core/cheatsheet-types";
 import { allSections } from "./data/sections";
 
