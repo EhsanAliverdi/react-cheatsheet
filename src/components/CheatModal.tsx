@@ -1,7 +1,7 @@
 // src/components/CheatModal.tsx
-import type { CheatItem, CheatExample } from "../core/cheatsheet-types";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vs } from "react-syntax-highlighter/dist/esm/styles/prism";
+import React from "react";
+import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
+import type { CheatExample, CheatItem } from "../core/cheatsheet-types";
 
 type CheatModalProps = {
   item: CheatItem | null;
@@ -15,6 +15,7 @@ export function CheatModal({ item, example, onClose }: CheatModalProps) {
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/40 px-4">
       <div className="relative max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+        {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3 bg-slate-50">
           <div>
             <p className="text-[0.65rem] uppercase tracking-[0.2em] text-sky-600">
@@ -32,32 +33,57 @@ export function CheatModal({ item, example, onClose }: CheatModalProps) {
           </button>
         </div>
 
+        {/* Body */}
         <div className="space-y-4 overflow-auto px-5 py-4">
           {example.description && (
             <p className="text-sm text-slate-700">{example.description}</p>
           )}
 
           <div className="rounded-xl border border-slate-200 bg-slate-50/60">
-            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-2 text-[0.7rem] text-slate-500">
-              <span>TypeScript / JSX</span>
-              <span className="rounded-full bg-white px-2 py-0.5 text-xs border border-slate-200">
-                VS style
-              </span>
-            </div>
-            <SyntaxHighlighter
-              language="tsx"
-              style={vs}
-              customStyle={{
-                margin: 0,
-                borderRadius: "0 0 0.75rem 0.75rem",
-                fontSize: "0.75rem",
-                maxHeight: "60vh"
-              }}
-              wrapLongLines
-              showLineNumbers
+            <LiveProvider
+              code={example.code.trim()}
+              noInline={true}
+              scope={{ React }}
             >
-              {example.code}
-            </SyntaxHighlighter>
+              {/* Top: preview + editor side by side on md+ */}
+              <div className="grid gap-0 border-b border-slate-200 md:grid-cols-2">
+                {/* Preview */}
+                <div className="bg-white p-4">
+                  <div className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-slate-500">
+                    Live preview
+                  </div>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-900">
+                    <LivePreview />
+                  </div>
+                </div>
+
+                {/* Editor */}
+                <div className="bg-slate-950 p-4">
+                  <div className="mb-2 flex items-center justify-between text-[0.7rem] text-slate-300">
+                    <span className="font-medium uppercase tracking-[0.16em]">
+                      TypeScript / JSX
+                    </span>
+                    <span className="rounded-full border border-slate-600 bg-slate-900 px-2 py-0.5 text-[0.65rem]">
+                      Editable
+                    </span>
+                  </div>
+                  <div className="rounded-lg border border-slate-800 bg-slate-950">
+                    <LiveEditor
+                      className="text-xs font-mono"
+                      style={{
+                        fontSize: "0.75rem",
+                        maxHeight: "50vh",
+                        overflow: "auto",
+                        padding: "0.75rem",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Errors */}
+              <LiveError className="px-4 py-2 text-xs bg-red-700 text-white" />
+            </LiveProvider>
           </div>
         </div>
       </div>

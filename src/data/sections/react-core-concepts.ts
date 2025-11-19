@@ -32,11 +32,17 @@ export const reactCoreConceptsSection: CheatSection = {
           code: `const name = "Ehsan";
 const element = <h1>Hello, {name}!</h1>;
 
-// Inside a component
-export function Greeting() {
+function Greeting() {
   const now = new Date().toLocaleTimeString();
-  return <p>Current time: {now}</p>;
-}`
+  return (
+    <div>
+      {element}
+      <p>Current time: {now}</p>
+    </div>
+  );
+}
+
+render(<Greeting />);`
         }
       ]
     },
@@ -61,24 +67,24 @@ export function Greeting() {
           id: "component-function",
           title: "Function component (recommended)",
           description: "The modern, hooks-friendly way to write components.",
-          code: `export function Welcome({ name }: { name: string }) {
-  return <h2>Welcome, {name}!</h2>;
-}`
+          code: `function Welcome(props) {
+  return <h2>Welcome, {props.name}!</h2>;
+}
+
+render(<Welcome name="Ehsan" />);`
         },
         {
           id: "component-class-legacy",
           title: "Class component (legacy style)",
           description:
             "Older syntax, still seen in existing codebases. Use functions + hooks for new code.",
-          code: `import React from "react";
-
-type Props = { name: string };
-
-export class WelcomeClass extends React.Component<Props> {
+          code: `class WelcomeClass extends React.Component {
   render() {
     return <h2>Welcome, {this.props.name}!</h2>;
   }
-}`
+}
+
+render(<WelcomeClass name="Ehsan" />);`
         }
       ]
     },
@@ -103,7 +109,7 @@ export class WelcomeClass extends React.Component<Props> {
           id: "props-basic",
           title: "Passing props",
           description: "Parent passes data to child via JSX attributes.",
-          code: `function UserCard({ name, age }: { name: string; age: number }) {
+          code: `function UserCard({ name, age }) {
   return (
     <div>
       <h3>{name}</h3>
@@ -112,9 +118,11 @@ export class WelcomeClass extends React.Component<Props> {
   );
 }
 
-export function App() {
+function App() {
   return <UserCard name="Ehsan" age={30} />;
-}`
+}
+
+render(<App />);`
         }
       ]
     },
@@ -140,10 +148,8 @@ export function App() {
           title: "State via useState",
           description:
             "A simple example of stateful data that updates on button click.",
-          code: `import { useState } from "react";
-
-export function Counter() {
-  const [count, setCount] = useState(0);
+          code: `function Counter() {
+  const [count, setCount] = React.useState(0);
 
   return (
     <div>
@@ -151,7 +157,9 @@ export function Counter() {
       <button onClick={() => setCount(c => c + 1)}>Increment</button>
     </div>
   );
-}`
+}
+
+render(<Counter />);`
         }
       ]
     },
@@ -181,7 +189,7 @@ export function Counter() {
   { id: 2, text: "Build a cheat sheet" },
 ];
 
-export function TodoList() {
+function TodoList() {
   return (
     <ul>
       {todos.map(todo => (
@@ -189,7 +197,9 @@ export function TodoList() {
       ))}
     </ul>
   );
-}`
+}
+
+render(<TodoList />);`
         }
       ]
     },
@@ -214,10 +224,8 @@ export function TodoList() {
           id: "conditional-basic",
           title: "Simple conditional rendering",
           description: "Toggle UI based on a boolean state.",
-          code: `import { useState } from "react";
-
-export function SecretToggle() {
-  const [show, setShow] = useState(false);
+          code: `function SecretToggle() {
+  const [show, setShow] = React.useState(false);
 
   return (
     <div>
@@ -228,7 +236,9 @@ export function SecretToggle() {
       {show && <p>🤫 This is a secret message!</p>}
     </div>
   );
-}`
+}
+
+render(<SecretToggle />);`
         }
       ]
     },
@@ -253,7 +263,7 @@ export function SecretToggle() {
           id: "fragment-basic",
           title: "Using fragments",
           description: "Return multiple sibling elements using a fragment.",
-          code: `export function UserInfo() {
+          code: `function UserInfo() {
   return (
     <>
       <h2>User Info</h2>
@@ -261,7 +271,9 @@ export function SecretToggle() {
       <p>Role: Developer</p>
     </>
   );
-}`
+}
+
+render(<UserInfo />);`
         }
       ]
     },
@@ -284,18 +296,18 @@ export function SecretToggle() {
       examples: [
         {
           id: "strict-mode-root",
-          title: "Enabling Strict Mode",
+          title: "Enabling Strict Mode (demo)",
           description:
-            "Wrap your app with StrictMode in the root file. Only affects development.",
-          code: `import React from "react";
-import ReactDOM from "react-dom/client";
-import { App } from "./App";
+            "This demo wraps a small component in StrictMode to show the JSX structure. In a real app you'd use this in main.tsx.",
+          code: `function StrictModeDemo() {
+  return (
+    <React.StrictMode>
+      <div>StrictMode is enabled around this subtree.</div>
+    </React.StrictMode>
+  );
+}
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);`
+render(<StrictModeDemo />);`
         }
       ]
     }
