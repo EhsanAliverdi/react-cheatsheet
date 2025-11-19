@@ -6,6 +6,15 @@ type AppLayoutProps = {
 };
 
 export function AppLayout({ children }: AppLayoutProps) {
+ // Safe guards in case something is undefined in dev
+  const version = typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "0.0.0";
+  const buildTimeIso =
+    typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : new Date().toISOString();
+
+  const buildDate = new Date(buildTimeIso);
+  const buildLabel = buildDate.toLocaleString(); // local time on your machine
+
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white/90 backdrop-blur">
@@ -31,8 +40,20 @@ export function AppLayout({ children }: AppLayoutProps) {
           </div>
         </div>
       </header>
-
+      <main className="flex-1">
       <div className="mx-auto max-w-6xl px-4 py-6 lg:py-8">{children}</div>
+</main>
+<footer className="border-t border-slate-200 bg-white/90">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 text-xs text-slate-500">
+          <span>React Cheat Sheet</span>
+          <span>
+            v{version} · Build {buildLabel}
+          </span>
+        </div>
+      </footer>
+
+
+
     </div>
   );
 }
