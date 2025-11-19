@@ -1,5 +1,6 @@
 // src/data/sections/index.ts
 import type { CheatSection } from "../../core/cheatsheet-types";
+import { reactCoreConceptsSection } from "./react-core-concepts";
 import { reactHooksCoreSection } from "./react-hooks-core";
 
 // Later you’ll add:
@@ -8,6 +9,7 @@ import { reactHooksCoreSection } from "./react-hooks-core";
 // ...
 
 export const allSections: CheatSection[] = [
+  reactCoreConceptsSection,
   reactHooksCoreSection
   // , reactComponentsBasicsSection,
   // , reactRoutingSection,
