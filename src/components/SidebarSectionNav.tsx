@@ -10,52 +10,56 @@ type SidebarSectionNavProps = {
 export function SidebarSectionNav({
   sections,
   selectedSectionId,
-  onSelectSection
+  onSelectSection,
 }: SidebarSectionNavProps) {
   return (
-    <aside className="w-56 shrink-0 rounded-2xl border border-slate-200 bg-white/80 p-3 shadow-sm">
-      <h2 className="mb-2 px-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-        Sections
-      </h2>
-      <nav className="space-y-1">
-        {sections.map((section) => {
-          const isActive = section.id === selectedSectionId;
-          const count = section.items.length;
+    <aside className="w-full md:w-60 md:shrink-0">
+      <div className="rounded-2xl border border-slate-200 bg-white/80 p-3 shadow-sm">
+        <h2 className="mb-2 px-2 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-slate-500">
+          Sections
+        </h2>
 
-          return (
-            <button
-              key={section.id}
-              type="button"
-              onClick={() => onSelectSection(section.id)}
-              className={[
-                "flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition",
-                isActive
-                  ? "bg-sky-50 text-sky-700 border border-sky-200"
-                  : "text-slate-700 hover:bg-slate-50"
-              ].join(" ")}
-            >
-              <span className="flex flex-col">
-                <span className="font-medium">{section.name}</span>
-                {section.description && (
-                  <span className="text-[0.65rem] text-slate-500">
-                    {section.description}
-                  </span>
-                )}
-              </span>
-              <span
+        {/* mobile: horizontal scroll · md+: vertical list */}
+        <nav className="flex gap-2 overflow-x-auto pb-1 md:flex-col md:gap-1 md:overflow-visible">
+          {sections.map((section) => {
+            const isActive = section.id === selectedSectionId;
+            const count = section.items.length;
+
+            return (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => onSelectSection(section.id)}
                 className={[
-                  "ml-2 inline-flex h-5 min-w-[1.5rem] items-center justify-center rounded-full border px-1 text-[0.65rem]",
+                  "flex min-w-[9rem] flex-1 items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition md:min-w-0",
                   isActive
-                    ? "border-sky-200 bg-white text-sky-700"
-                    : "border-slate-200 bg-slate-50 text-slate-500"
+                    ? "border border-sky-200 bg-sky-50 text-sky-700"
+                    : "border border-transparent text-slate-700 hover:border-slate-200 hover:bg-slate-50",
                 ].join(" ")}
               >
-                {count}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
+                <span className="flex flex-col">
+                  <span className="font-medium truncate">{section.name}</span>
+                  {section.description && (
+                    <span className="hidden text-[0.65rem] text-slate-500 md:inline">
+                      {section.description}
+                    </span>
+                  )}
+                </span>
+                <span
+                  className={[
+                    "ml-2 inline-flex h-5 min-w-[1.5rem] items-center justify-center rounded-full border px-1 text-[0.65rem]",
+                    isActive
+                      ? "border-sky-200 bg-white text-sky-700"
+                      : "border-slate-200 bg-slate-50 text-slate-500",
+                  ].join(" ")}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
     </aside>
   );
 }

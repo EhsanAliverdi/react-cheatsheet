@@ -9,12 +9,13 @@ type CheatCardProps = {
 const levelLabel: Record<CheatItem["level"], string> = {
   beginner: "Beginner",
   intermediate: "Intermediate",
-  advanced: "Advanced"
+  advanced: "Advanced",
 };
 
 export function CheatCard({ item, onViewExample }: CheatCardProps) {
   return (
-    <article className="group flex flex-col rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md">
+    <article className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md">
+      {" "}
       <div className="mb-3 flex items-start justify-between gap-2">
         <div>
           {item.label && (
@@ -30,9 +31,7 @@ export function CheatCard({ item, onViewExample }: CheatCardProps) {
           {levelLabel[item.level]}
         </span>
       </div>
-
       <p className="mb-3 text-xs text-slate-700">{item.summary}</p>
-
       <ul className="mb-4 space-y-1 text-[0.7rem] text-slate-600">
         {item.keyPoints.map((point) => (
           <li key={point} className="flex gap-1.5">
@@ -41,7 +40,6 @@ export function CheatCard({ item, onViewExample }: CheatCardProps) {
           </li>
         ))}
       </ul>
-
       <div className="mt-auto flex items-center justify-between pt-2">
         <div className="flex flex-wrap gap-1">
           {item.tags.map((tag) => (

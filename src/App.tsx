@@ -46,7 +46,8 @@ function App() {
         />
       }
     >
-      <div className="flex gap-6">
+      {/* main layout: column on mobile, row on large screens */}
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <SidebarSectionNav
           sections={allSections}
           selectedSectionId={selectedSection.id}
@@ -54,17 +55,19 @@ function App() {
         />
 
         <div className="flex-1">
-          <section className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <section className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-base font-semibold text-slate-900">
                 {selectedSection.name}
               </h2>
-              <p className="text-sm text-slate-600">
+              <p className="text-xs text-slate-600 sm:text-sm">
                 {selectedSection.description ??
                   "Choose a section to explore related React concepts."}
               </p>
             </div>
-            <div className="flex gap-2 text-xs">
+
+            {/* stats pills – wrap on small screens */}
+            <div className="flex flex-wrap gap-2 text-[11px] sm:text-xs sm:justify-end">
               <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-600">
                 Entries in this section: {items.length}
               </span>
@@ -74,7 +77,8 @@ function App() {
             </div>
           </section>
 
-          <section className="grid gap-4 md:grid-cols-2">
+          {/* responsive cards grid */}
+          <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {items.map((item) => (
               <CheatCard
                 key={item.id}

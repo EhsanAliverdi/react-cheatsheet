@@ -8,6 +8,9 @@ export const reactHooksCoreSection: CheatSection = {
   shortName: "Hooks",
   description: "Essential React hooks you use in almost every application.",
   items: [
+    //
+    // ──────────────────────────────── useState ────────────────────────────────
+    //
     {
       id: "useState",
       name: "useState",
@@ -27,10 +30,8 @@ export const reactHooksCoreSection: CheatSection = {
           id: "useState-basic-counter",
           title: "Basic counter",
           description: "Simple numeric state updated via a button click.",
-          code: `import { useState } from "react";
-
-export function Counter() {
-  const [count, setCount] = useState(0);
+          code: `function Counter() {
+  const [count, setCount] = React.useState(0);
 
   function handleIncrement() {
     setCount(prev => prev + 1);
@@ -42,16 +43,16 @@ export function Counter() {
       <button onClick={handleIncrement}>+ Increment</button>
     </div>
   );
-}`
+}
+
+render(<Counter />);`
         },
         {
           id: "useState-greeting",
           title: "Greeting with name",
           description: "Update a name value and render it in the UI.",
-          code: `import { useState } from "react";
-
-export function Greeting() {
-  const [name, setName] = useState("Developer");
+          code: `function Greeting() {
+  const [name, setName] = React.useState("Developer");
 
   return (
     <div>
@@ -61,10 +62,16 @@ export function Greeting() {
       </button>
     </div>
   );
-}`
+}
+
+render(<Greeting />);`
         }
       ]
     },
+
+    //
+    // ──────────────────────────────── useEffect ────────────────────────────────
+    //
     {
       id: "useEffect",
       name: "useEffect",
@@ -85,12 +92,10 @@ export function Greeting() {
           id: "useEffect-once",
           title: "Run once on mount",
           description: "Effect with [] runs a single time after mount.",
-          code: `import { useEffect, useState } from "react";
+          code: `function WelcomeEffect() {
+  const [message, setMessage] = React.useState("Loading...");
 
-export function WelcomeEffect() {
-  const [message, setMessage] = useState("Loading...");
-
-  useEffect(() => {
+  React.useEffect(() => {
     const timeoutId = setTimeout(() => {
       setMessage("Hello from useEffect!");
     }, 800);
@@ -99,19 +104,19 @@ export function WelcomeEffect() {
   }, []);
 
   return <p>{message}</p>;
-}`
+}
+
+render(<WelcomeEffect />);`
         },
         {
           id: "useEffect-dependency",
           title: "Effect with dependency",
           description:
             "Effect re-runs whenever 'name' changes, e.g. to sync with an API.",
-          code: `import { useEffect, useState } from "react";
+          code: `function NameLogger() {
+  const [name, setName] = React.useState("Ehsan");
 
-export function NameLogger() {
-  const [name, setName] = useState("Ehsan");
-
-  useEffect(() => {
+  React.useEffect(() => {
     console.log("Name changed:", name);
   }, [name]);
 
@@ -125,10 +130,16 @@ export function NameLogger() {
       <p>Open dev tools console to see logs when the name changes.</p>
     </div>
   );
-}`
+}
+
+render(<NameLogger />);`
         }
       ]
     },
+
+    //
+    // ──────────────────────────────── useCallback ────────────────────────────────
+    //
     {
       id: "useCallback",
       name: "useCallback",
@@ -149,12 +160,10 @@ export function NameLogger() {
           title: "Stable click handler",
           description:
             "Handler instance changes only when dependencies change.",
-          code: `import { useCallback, useState } from "react";
+          code: `function MemoizedClick() {
+  const [count, setCount] = React.useState(0);
 
-export function MemoizedClick() {
-  const [count, setCount] = useState(0);
-
-  const handleClick = useCallback(() => {
+  const handleClick = React.useCallback(() => {
     setCount(prev => prev + 1);
   }, []);
 
@@ -163,10 +172,16 @@ export function MemoizedClick() {
       Clicked {count} times
     </button>
   );
-}`
+}
+
+render(<MemoizedClick />);`
         }
       ]
     },
+
+    //
+    // ──────────────────────────────── useReducer ────────────────────────────────
+    //
     {
       id: "useReducer",
       name: "useReducer",
@@ -186,19 +201,11 @@ export function MemoizedClick() {
           id: "useReducer-counter",
           title: "Counter reducer",
           description: "Simple reducer with increment, decrement, and reset.",
-          code: `import { useReducer } from "react";
-
-type State = { count: number };
-type Action =
-  | { type: "increment" }
-  | { type: "decrement" }
-  | { type: "reset"; payload: number };
-
-function init(initialCount: number): State {
+          code: `function init(initialCount) {
   return { count: initialCount };
 }
 
-function reducer(state: State, action: Action): State {
+function reducer(state, action) {
   switch (action.type) {
     case "increment":
       return { count: state.count + 1 };
@@ -207,27 +214,41 @@ function reducer(state: State, action: Action): State {
     case "reset":
       return init(action.payload);
     default:
-      throw new Error("Unknown action");
+      throw new Error("Unknown action: " + action.type);
   }
 }
 
-export function CounterWithReducer({ initialCount = 0 }: { initialCount?: number }) {
-  const [state, dispatch] = useReducer(reducer, initialCount, init);
+function CounterWithReducer(props) {
+  const initialCount =
+    props.initialCount !== undefined && props.initialCount !== null
+      ? props.initialCount
+      : 0;
+
+  const [state, dispatch] = React.useReducer(reducer, initialCount, init);
 
   return (
     <div>
       <button onClick={() => dispatch({ type: "decrement" })}>-</button>
-      <span>{state.count}</span>
+      <span style={{ margin: "0 0.5rem" }}>{state.count}</span>
       <button onClick={() => dispatch({ type: "increment" })}>+</button>
-      <button onClick={() => dispatch({ type: "reset", payload: initialCount })}>
+      <button
+        style={{ marginLeft: "0.5rem" }}
+        onClick={() => dispatch({ type: "reset", payload: initialCount })}
+      >
         Reset
       </button>
     </div>
   );
-}`
+}
+
+render(<CounterWithReducer initialCount={0} />);`
         }
       ]
     },
+
+    //
+    // ──────────────────────────────── useRef ────────────────────────────────
+    //
     {
       id: "useRef",
       name: "useRef",
@@ -247,13 +268,13 @@ export function CounterWithReducer({ initialCount = 0 }: { initialCount?: number
           id: "useRef-focus",
           title: "Focus textarea with ref",
           description: "Access an element directly and call focus() using ref.",
-          code: `import { useRef } from "react";
-
-export function FocusTextarea() {
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+          code: `function FocusTextarea() {
+  const textareaRef = React.useRef(null);
 
   const handleFocus = () => {
-    textareaRef.current?.focus();
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
   };
 
   return (
@@ -262,13 +283,16 @@ export function FocusTextarea() {
         ref={textareaRef}
         rows={4}
         placeholder="Type something here..."
+        style={{ display: "block", width: "100%", marginBottom: "0.5rem" }}
       />
       <button onClick={handleFocus}>
         Focus textarea
       </button>
     </div>
   );
-}`
+}
+
+render(<FocusTextarea />);`
         }
       ]
     }

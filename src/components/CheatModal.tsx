@@ -13,8 +13,8 @@ export function CheatModal({ item, example, onClose }: CheatModalProps) {
   if (!item || !example) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/40 px-4">
-      <div className="relative max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/40 px-2 sm:px-4">
+      <div className="relative max-h-[100vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:max-h-[90vh]">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3 bg-slate-50">
           <div>
