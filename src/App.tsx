@@ -1,12 +1,11 @@
-// src/App.tsx
 import { useMemo, useState } from "react";
 import { AppLayout } from "./components/AppLayout";
-import { SidebarSectionNav } from "./components/SidebarSectionNav";
 import { CheatCard } from "./components/CheatCard";
 import { CheatModal } from "./components/CheatModal";
-import type { CheatItem, CheatExample } from "./core/cheatsheet-types";
+import { GlobalSearch } from "./components/GlobalSearch";
+import { SidebarSectionNav } from "./components/SidebarSectionNav";
+import type { CheatExample, CheatItem } from "./core/cheatsheet-types";
 import { allSections } from "./data/sections";
-
 
 function App() {
   const [selectedSectionId, setSelectedSectionId] = useState<string>(
@@ -35,7 +34,18 @@ function App() {
   };
 
   return (
-    <AppLayout>
+    <AppLayout
+      headerSearch={
+        <GlobalSearch
+          sections={allSections}
+          onNavigateToItem={(sectionId, item) => {
+            setSelectedSectionId(sectionId);
+            setSelectedItem(item);
+            setSelectedExample(item.examples[0] ?? null);
+          }}
+        />
+      }
+    >
       <div className="flex gap-6">
         <SidebarSectionNav
           sections={allSections}

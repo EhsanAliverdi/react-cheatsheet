@@ -3,10 +3,10 @@ import type { ReactNode } from "react";
 
 type AppLayoutProps = {
   children: ReactNode;
+  headerSearch?: ReactNode; // 👈 new
 };
 
-export function AppLayout({ children }: AppLayoutProps) {
-  // Safe guards in case something is undefined in dev
+export function AppLayout({ children, headerSearch }: AppLayoutProps) {
   const version =
     typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "0.0.0";
   const buildTimeIso =
@@ -15,10 +15,10 @@ export function AppLayout({ children }: AppLayoutProps) {
       : new Date().toISOString();
 
   const buildDate = new Date(buildTimeIso);
-  const buildLabel = buildDate.toLocaleString(); // local time on your machine
+  const buildLabel = buildDate.toLocaleString();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
@@ -36,16 +36,19 @@ export function AppLayout({ children }: AppLayoutProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-xs">
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-600">
+          <div className="flex items-center gap-3 text-xs">
+            <span className="hidden sm:inline rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-600">
               React · TypeScript
             </span>
+            {headerSearch}
           </div>
         </div>
       </header>
+
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-4 py-6 lg:py-8">{children}</div>
       </main>
+
       <footer className="border-t border-slate-200 bg-white/90">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 text-xs text-slate-500">
           <span>React Cheat Sheet</span>
