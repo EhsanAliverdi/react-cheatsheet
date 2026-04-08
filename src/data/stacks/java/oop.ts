@@ -15,6 +15,21 @@ export const javaOopSection: CheatSection = {
       label: "Classes",
       summary:
         "A class is a blueprint for objects. It bundles state (fields) and behaviour (methods) together.",
+      details: `## What is a class?
+A class is a template for creating objects. Once you define a class, you can create as many instances (objects) as you need. Each instance has its own copy of the fields but shares the method definitions.
+
+## Fields and methods
+- Fields: variables that hold the object's state (name, age, balance)
+- Methods: functions that define the object's behaviour (getBalance, deposit, withdraw)
+
+## Encapsulation
+Declare fields as private and provide public getters/setters. This protects the data — callers can only change values through controlled methods that can validate input.
+
+## The constructor
+The constructor runs when you call new Person("Ehsan", 30). It initialises the object's fields. Use this.field = param to assign constructor parameters to instance fields.
+
+## Records (Java 16+)
+A Record is a compact, immutable data class. record Point(int x, int y) {} automatically generates the constructor, getters, equals, hashCode, and toString. Use Records for simple data carriers where you don't need custom logic.`,
       level: "beginner",
       tags: ["class", "object", "constructor", "encapsulation"],
       keyPoints: [
@@ -79,6 +94,20 @@ System.out.println(pt.x());   // 3`
       label: "Inheritance",
       summary:
         "A subclass extends a superclass to inherit its fields and methods and can override behaviour.",
+      details: `## What is inheritance?
+Inheritance lets one class reuse the code of another. The subclass (child) gets all the non-private fields and methods of the superclass (parent) for free, and can add or replace behaviour.
+
+## How to extend a class
+Use the extends keyword: class Dog extends Animal. Java only supports single inheritance — a class can extend exactly one parent. For multiple inheritance of behaviour, use interfaces.
+
+## super() — calling the parent
+The first line in a subclass constructor must call super() to initialise the parent's fields. You can also call super.methodName() to invoke the parent's version of an overridden method.
+
+## @Override — make it explicit
+Marking an overriding method with @Override is technically optional but highly recommended. If you misspell the method name, @Override turns it into a compile error instead of silently creating a new unrelated method.
+
+## Polymorphism in practice
+A parent-type reference can point to any subclass instance. Animal a = new Dog("Rex"). When you call a.speak(), Java calls Dog's version at runtime. This is the foundation of pluggable, extensible design.`,
       level: "beginner",
       tags: ["inheritance", "extends", "override", "polymorphism"],
       keyPoints: [
@@ -148,6 +177,22 @@ for (Animal a : animals) {
       label: "Interfaces",
       summary:
         "Interfaces define a contract of methods that implementing classes must fulfil. A class can implement multiple interfaces.",
+      details: `## What is an interface?
+An interface is a promise. It says: any class that implements me guarantees it has these methods. Callers can depend on the interface without knowing the concrete implementation.
+
+## Why interfaces matter
+A class can only extend one parent, but implements as many interfaces as needed. This is Java's answer to multiple inheritance of behaviour.
+
+## Abstract vs default methods
+- Abstract (no body): all implementing classes must provide the implementation
+- default (has body, Java 8+): optional to override; provides a default implementation in the interface itself
+- static: belongs to the interface, not instances
+
+## Functional interfaces and lambdas
+Any interface with exactly one abstract method is a functional interface. You can pass a lambda expression anywhere that interface is expected. This is the foundation of Java's Stream API and event handling.
+
+## Design principle
+Depend on abstractions, not concrete classes. Instead of ArrayList<String> list = new ArrayList<>(), write List<String> list = new ArrayList<>(). This makes it trivial to swap the implementation later.`,
       level: "intermediate",
       tags: ["interface", "implements", "contract", "abstraction"],
       keyPoints: [
@@ -216,6 +261,21 @@ System.out.println(trim.transform("  spaces  ")); // "spaces"`
       label: "Generics",
       summary:
         "Generics let you write type-safe reusable classes and methods that work with any type.",
+      details: `## What problem do generics solve?
+Before generics, you'd store objects in a List and then cast them back on retrieval. A wrong cast would crash at runtime. Generics move type checking to compile time — you get an error before the code ever runs.
+
+## Generic class syntax
+class Box<T> { T value; } — T is a placeholder. When you create Box<String>, T is replaced by String everywhere in the class. Box<Integer> creates an entirely separate type-safe box.
+
+## Bounded type parameters
+<T extends Comparable<T>> restricts T to types that are comparable. This lets you call compareTo() on T inside the method safely. Without the bound, the compiler would reject that call.
+
+## Wildcards
+- List<? extends Number>: read-only — accepts List<Integer>, List<Double>, etc.
+- List<? super Integer>: write-only — accepts List<Number>, List<Object>
+
+## Type erasure
+Generic type information is removed at compile time. At runtime, a List<String> is just a List. This is why you cannot do new T[] or check instanceof List<String> — the type parameter does not exist in bytecode.`,
       level: "intermediate",
       tags: ["generics", "type-safety", "collections"],
       keyPoints: [
@@ -278,6 +338,23 @@ System.out.println(sum(doubles)); // 4.0`
       label: "Abstract",
       summary:
         "Abstract classes can provide partial implementations. They sit between concrete classes and pure interfaces.",
+      details: `## What is an abstract class?
+An abstract class is a class that cannot be instantiated on its own. It exists only to be extended. It can provide some shared implementations while requiring subclasses to fill in the specific pieces.
+
+## Abstract vs concrete methods
+- Abstract method: has no body — subclasses must implement it
+- Concrete method: has a full implementation — subclasses inherit it and may optionally override it
+
+## Key difference from interfaces
+- Interfaces: can only have constants and method signatures (and default methods), no state
+- Abstract classes: can have fields (state), constructors, and both abstract and concrete methods
+Use an abstract class when related classes share both code AND state.
+
+## Template Method pattern
+Define a final method in the abstract class that outlines an algorithm's steps, then call abstract methods for the customisable parts. Subclasses override only the steps they need to change, not the overall flow.
+
+## When to choose abstract class over interface
+Choose abstract class when: you're sharing code among closely related classes, the shared code needs state (fields), or subclasses need to call a common constructor. Choose interface when: unrelated classes need to share a contract.`,
       level: "intermediate",
       tags: ["abstract", "template-method", "inheritance"],
       keyPoints: [

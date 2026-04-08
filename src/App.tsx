@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { AppLayout } from "./components/AppLayout";
 import { CheatCard } from "./components/CheatCard";
 import { CheatModal } from "./components/CheatModal";
+import { DetailsModal } from "./components/DetailsModal";
 import { GlobalSearch } from "./components/GlobalSearch";
 import { SidebarSectionNav } from "./components/SidebarSectionNav";
 import { StackSelector } from "./components/StackSelector";
@@ -16,9 +17,8 @@ function App() {
     allStacks[0]?.sections[0]?.id ?? ""
   );
   const [selectedItem, setSelectedItem] = useState<CheatItem | null>(null);
-  const [selectedExample, setSelectedExample] = useState<CheatExample | null>(
-    null
-  );
+  const [selectedExample, setSelectedExample] = useState<CheatExample | null>(null);
+  const [detailsItem, setDetailsItem] = useState<CheatItem | null>(null);
 
   const selectedStack = useMemo(
     () => allStacks.find((s) => s.id === selectedStackId) ?? allStacks[0],
@@ -40,6 +40,7 @@ function App() {
     setSelectedSectionId(stack?.sections[0]?.id ?? "");
     setSelectedItem(null);
     setSelectedExample(null);
+    setDetailsItem(null);
   };
 
   const openFirstExample = (item: CheatItem) => {
@@ -84,6 +85,7 @@ function App() {
             setSelectedSectionId(id);
             setSelectedItem(null);
             setSelectedExample(null);
+            setDetailsItem(null);
           }}
         />
 
@@ -120,6 +122,7 @@ function App() {
                 key={item.id}
                 item={item}
                 onViewExample={() => openFirstExample(item)}
+                onReadMore={() => setDetailsItem(item)}
               />
             ))}
 
@@ -136,6 +139,11 @@ function App() {
         item={selectedItem}
         example={selectedExample}
         onClose={closeModal}
+      />
+
+      <DetailsModal
+        item={detailsItem}
+        onClose={() => setDetailsItem(null)}
       />
     </AppLayout>
   );

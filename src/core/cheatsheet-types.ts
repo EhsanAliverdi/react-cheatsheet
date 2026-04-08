@@ -21,6 +21,8 @@ export type CheatItem = {
   name: string;     // e.g. "useState", "Array.map()", "ArrayList"
   label?: string;   // e.g. "State Hook", "Higher-Order Function"
   summary: string;
+  /** Plain-English "explain like I'm 5" deep-dive shown in the Details modal. */
+  details?: string;
   level: CheatItemLevel;
   tags: string[];
   keyPoints: string[];

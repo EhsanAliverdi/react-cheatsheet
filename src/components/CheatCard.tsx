@@ -4,6 +4,7 @@ import type { CheatItem } from "../core/cheatsheet-types";
 type CheatCardProps = {
   item: CheatItem;
   onViewExample: () => void;
+  onReadMore: () => void;
 };
 
 const levelLabel: Record<CheatItem["level"], string> = {
@@ -12,7 +13,7 @@ const levelLabel: Record<CheatItem["level"], string> = {
   advanced: "Advanced",
 };
 
-export function CheatCard({ item, onViewExample }: CheatCardProps) {
+export function CheatCard({ item, onViewExample, onReadMore }: CheatCardProps) {
   return (
     <article className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md">
       {" "}
@@ -40,7 +41,7 @@ export function CheatCard({ item, onViewExample }: CheatCardProps) {
           </li>
         ))}
       </ul>
-      <div className="mt-auto flex items-center justify-between pt-2">
+      <div className="mt-auto flex items-center justify-between gap-2 pt-2">
         <div className="flex flex-wrap gap-1">
           {item.tags.map((tag) => (
             <span
@@ -52,14 +53,24 @@ export function CheatCard({ item, onViewExample }: CheatCardProps) {
           ))}
         </div>
 
-        {item.examples.length > 0 && (
-          <button
-            onClick={onViewExample}
-            className="text-[0.7rem] font-medium text-sky-700 underline-offset-4 hover:underline"
-          >
-            View example
-          </button>
-        )}
+        <div className="flex shrink-0 items-center gap-3">
+          {item.details && (
+            <button
+              onClick={onReadMore}
+              className="text-[0.7rem] font-medium text-slate-500 underline-offset-4 hover:text-slate-800 hover:underline"
+            >
+              Read more
+            </button>
+          )}
+          {item.examples.length > 0 && (
+            <button
+              onClick={onViewExample}
+              className="text-[0.7rem] font-medium text-sky-700 underline-offset-4 hover:underline"
+            >
+              View example
+            </button>
+          )}
+        </div>
       </div>
     </article>
   );
