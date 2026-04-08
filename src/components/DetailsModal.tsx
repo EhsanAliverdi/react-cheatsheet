@@ -1,5 +1,6 @@
 // src/components/DetailsModal.tsx
 import type { CheatItem } from "../core/cheatsheet-types";
+import { MermaidDiagram } from "./MermaidDiagram";
 
 type DetailsModalProps = {
   item: CheatItem | null;
@@ -13,17 +14,47 @@ const levelBadge: Record<CheatItem["level"], { label: string; classes: string }>
 };
 
 /**
- * Renders the item.details string.
- * Lines that start with "##" become section headings.
- * Lines that start with "- " become bullet points.
- * Blank lines produce spacing.
- * Everything else is a paragraph.
+ * Splits details text into "segments" — either a raw mermaid code block
+ * or a block of regular markdown-lite lines — then renders each.
+ *
+ * Supported markdown-lite:
+ *   ## Heading        → section heading
+ *   - bullet          → unordered list item
+ *   ```mermaid ... ``` → interactive Mermaid diagram
+ *   blank line        → spacing
+ *   anything else     → paragraph
  */
 function renderDetails(text: string) {
+  // Split on ```mermaid ... ``` fences (non-greedy, multiline)
+  const FENCE_RE = /```mermaid\n([\s\S]*?)```/g;
+  const nodes: React.ReactNode[] = [];
+  let key = 0;
+  let lastIndex = 0;
+
+  let match: RegExpExecArray | null;
+  while ((match = FENCE_RE.exec(text)) !== null) {
+    // Render any text before this fence
+    const before = text.slice(lastIndex, match.index);
+    if (before.trim()) nodes.push(...renderMarkdownLite(before, key));
+    key += 100;
+
+    // Render the mermaid diagram
+    nodes.push(<MermaidDiagram key={key++} code={match[1]} />);
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Render any remaining text after the last fence
+  const remaining = text.slice(lastIndex);
+  if (remaining.trim()) nodes.push(...renderMarkdownLite(remaining, key));
+
+  return nodes;
+}
+
+function renderMarkdownLite(text: string, startKey: number) {
   const lines = text.split("\n");
   const nodes: React.ReactNode[] = [];
   let bulletBuffer: string[] = [];
-  let key = 0;
+  let key = startKey;
 
   const flushBullets = () => {
     if (bulletBuffer.length === 0) return;
