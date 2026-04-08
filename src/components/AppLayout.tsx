@@ -23,15 +23,15 @@ export function AppLayout({ children, headerSearch }: AppLayoutProps) {
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Logo + title */}
           <div className="flex items-start gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-100 text-xs font-semibold text-sky-700 ring-1 ring-sky-200">
-              R
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-800 text-xs font-bold text-white ring-1 ring-slate-700">
+              FS
             </div>
             <div>
               <h1 className="text-sm font-semibold tracking-wide text-slate-900">
-                React Cheat Sheet
+                Full Stack Engineer Cheat Sheet
               </h1>
               <p className="text-[11px] text-slate-500">
-                A compact reference for React hooks, components, routing & more.
+                Quick reference for React, JavaScript, Java, and more.
               </p>
             </div>
           </div>
@@ -39,7 +39,7 @@ export function AppLayout({ children, headerSearch }: AppLayoutProps) {
           {/* Tech pill + search */}
           <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:flex-row sm:items-center sm:justify-end">
             <span className="hidden rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] text-slate-600 sm:inline">
-              React · TypeScript
+              React · JS · Java
             </span>
             {headerSearch && (
               <div className="w-full sm:w-80">{headerSearch}</div>
@@ -54,7 +54,7 @@ export function AppLayout({ children, headerSearch }: AppLayoutProps) {
 
       <footer className="border-t border-slate-200 bg-white/90">
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3 text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <span>React Cheat Sheet</span>
+          <span>Full Stack Engineer Cheat Sheet</span>
           <span>
             v{version} · Build {buildLabel}
           </span>
