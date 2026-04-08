@@ -6,7 +6,8 @@ dist/
 *.log
 
 # editor / OS
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 .DS_Store
 
 # env
