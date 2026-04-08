@@ -1,0 +1,26 @@
+# docker-compose.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# Production deployment for Full Stack Engineer Cheat Sheet.
+# Assumes a Traefik reverse proxy running on the host with:
+#   - an external Docker network named "proxy"
+#   - a Let's Encrypt cert resolver named "le"
+#   - port 443 entrypoint named "websecure"
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  app:
+    image: ghcr.io/ehsanaliverdi/react-cheatsheet:main
+    container_name: fse-cheatsheet
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.fse-cheatsheet.rule=Host(`cheatsheet.ehsanaliverdi.dev`)
+      - traefik.http.routers.fse-cheatsheet.entrypoints=websecure
+      - traefik.http.routers.fse-cheatsheet.tls.certresolver=le
+      - traefik.http.services.fse-cheatsheet.loadbalancer.server.port=80
+
+networks:
+  proxy:
+    external: true

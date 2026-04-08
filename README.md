@@ -2,7 +2,7 @@
 
 An interactive, browser-based quick reference for full-stack developers. Browse multiple technology stacks, read concise key-point cards, and open a modal with a **live editable code playground** (React/JS) or a **syntax-highlighted static block** (Java and other compiled languages).
 
-**Live app  [dev.react.shimmerapp.com](https://dev.react.shimmerapp.com)**
+**Live app → [cheatsheet.ehsanaliverdi.dev](https://cheatsheet.ehsanaliverdi.dev)**
 
 ---
 
@@ -221,32 +221,117 @@ That's it  StackSelector, GlobalSearch, and SidebarSectionNav update automatical
 
 ## Deployment
 
-### Docker (two-stage build)
+### How the image is built
+
+The `Dockerfile` uses a **two-stage build** so the final image contains only Nginx and the compiled static files — no Node.js runtime:
 
 ```
-Stage 1  build   (node:22-alpine)
-  npm install && npm run build    /app/dist
+Stage 1 — build   (node:22-alpine)
+  COPY package*.json → npm install
+  COPY . → npm run build  →  /app/dist
 
-Stage 2  runtime (nginx:1.27-alpine)
-  COPY /app/dist  /usr/share/nginx/html
+Stage 2 — runtime (nginx:1.27-alpine)
+  COPY /app/dist → /usr/share/nginx/html
   EXPOSE 80
 ```
 
-The production image contains only Nginx and the compiled static files.
+### Run locally with Docker
 
 ```bash
-# Build
+# Build the image
 docker build -t fse-cheatsheet .
 
 # Run on port 8080
-docker run -p 8080:80 fse-cheatsheet
+docker run --rm -p 8080:80 fse-cheatsheet
+# → open http://localhost:8080
+```
+
+### Deploy to a server with Traefik (docker-compose.yml)
+
+A ready-to-use `docker-compose.yml` is included in the repository root.
+It assumes your server already runs **Traefik** as a reverse proxy with:
+- An external Docker network named `proxy`
+- A Let's Encrypt cert resolver named `le`
+- A `websecure` (HTTPS / port 443) entrypoint
+
+```yaml
+services:
+  app:
+    image: ghcr.io/ehsanaliverdi/react-cheatsheet:main
+    container_name: fse-cheatsheet
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.fse-cheatsheet.rule=Host(`cheatsheet.ehsanaliverdi.dev`)
+      - traefik.http.routers.fse-cheatsheet.entrypoints=websecure
+      - traefik.http.routers.fse-cheatsheet.tls.certresolver=le
+      - traefik.http.services.fse-cheatsheet.loadbalancer.server.port=80
+
+networks:
+  proxy:
+    external: true
+```
+
+#### Step-by-step server deployment
+
+**1. Point your DNS**
+
+In your DNS provider, create an `A` record:
+```
+cheatsheet.ehsanaliverdi.dev  →  <your server IP>
+```
+Wait for propagation (usually a few minutes with a short TTL).
+
+**2. Copy the compose file to the server**
+
+```bash
+scp docker-compose.yml user@your-server:~/fse-cheatsheet/
+# or clone the repo directly:
+git clone https://github.com/ehsanaliverdi/react-cheatsheet.git ~/fse-cheatsheet
+```
+
+**3. Pull the latest image and start**
+
+```bash
+cd ~/fse-cheatsheet
+docker compose pull          # pull latest image from ghcr.io
+docker compose up -d         # start in detached mode
+```
+
+Traefik will automatically obtain a TLS certificate from Let's Encrypt and begin routing `https://cheatsheet.ehsanaliverdi.dev` to the container.
+
+**4. Verify**
+
+```bash
+docker compose ps            # container should show "running"
+docker compose logs -f app   # tail logs
+curl -I https://cheatsheet.ehsanaliverdi.dev
+# Expected: HTTP/2 200
+```
+
+**5. Update to a new version**
+
+Every push to `main` triggers a GitHub Actions build that publishes a new image to `ghcr.io/ehsanaliverdi/react-cheatsheet:main`. To deploy the update:
+
+```bash
+cd ~/fse-cheatsheet
+docker compose pull && docker compose up -d
+```
+
+**6. Stop / remove**
+
+```bash
+docker compose down          # stop and remove container (image kept)
+docker compose down --rmi all  # also remove the image
 ```
 
 ### Live URL
 
-The container is hosted and served at:
+**[https://cheatsheet.ehsanaliverdi.dev](https://cheatsheet.ehsanaliverdi.dev)**
 
-**[https://dev.react.shimmerapp.com](https://dev.react.shimmerapp.com)**
+> The old URL `dev.react.shimmerapp.com` redirects to the new domain.
 
 TLS termination and the custom subdomain are handled by the reverse proxy in front of the container.
 
